@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Find a lunch buddy today!</title>
+	<link rel="stylesheet" type="text/css" href="/static/css/dashboard_style.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			// var alerted = localStorage.getItem('alerted') ||'';
+			$.get('/users/get_info', function(res) {
+				var str = '';
+				if(res.headline){
+					str += res.headline;
+				$('#info').html(str);	
+				} else {
+					str = '';
+				}
+				
+			}, 'json');
+
+			$('#available').click(function(){
+		 		$("#form").show("slow");
+	 			$('#add_yourself').submit(function(){
+    				$.post($(this).attr('action'), $(this).serialize(), function(res) {
+    					console.log(res);
+        				$('#flash').html(res);
+    				});
+					$.get('/arrangements/get_availables', function(res) {
+						$('#first tbody').html(res);
+					});
+		    		return false;
+    			});
+        	});
+			setInterval(function() {
+				$.get('/arrangements/get_availables', function(res) {
+					// if(res){
+					// 	if(alerted != 'yes') {
+					// 		alert('You have a new request!');
+					// 		localStorage.setItem('alerted', 'yes');
+					// 	}
+					// }
+					$('#first tbody').html(res);
+				});
+				return false;
+			}, 1000);
+
+
+        });
+	</script>
+</head>
+<body>
+	<div id="container">
+			<ul class="nav nav-pills col-md-12 col-xs-12">
+				<li class="active"><a href="/users/dashboard"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></a></li>
+				{% if friend_check %}
+				<li><a href="/arrangements/match">My Match</a></li>
+				{% endif %}
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">{{session['name']}} 
+					<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="/users/logout">Logout</a></li>
+						<li><a href="/users/profile">Profile</a></li>
+					</ul>
+				</li>
+				<li class="pull-right"><a href="/users/dashboard" ><img id="lunchtogethr" src="/static/images/lunchtogethr2.png"></a>
+			</ul>
+		
+		<div id="flash">
+	        {% with messages = get_flashed_messages() %}
+	            {% if messages %}
+	                {% for message in messages %}
+	                    <div class="alert alert-danger" role="alert">
+		                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+		  					<span class="sr-only">Error:</span>
+	                    	<p id="flag">{{message}}</p>
+	                    </div>
+	                {% endfor %}
+	            {% endif %}
+	        {% endwith %}
+        </div>
+        <button id="available" class="pull-right">I'm available!</button></br></br>
+		<div id="centerpiece">
+			<div style="text-align:center"><img src="{{session['image_link']}}" class="img-thumbnail"></div>
+			<div id="info">{{session['headline']}}</div>
+		</div>
+		<div id="form" style="display:none">
+			<form id="add_yourself" action="/arrangements/add" method="post" class="form-inline">
+				<div class="form-group">
+					Locations:<select name="location" class="form-control">
+						{% for x in locations %}
+							  <option value="{{x.location}}" name="location">{{x.location}}</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					New Location:<input type="text" name="location_new" placeholder="Location" class="form-control">
+				</div>
+				<div class="form-group">
+					Topics:<select name="topic" class="form-control">
+						{% for x in topics %}
+							<div class='topic'>
+							  <option value="{{x.topic}}" name="topic">{{x.topic}}</option>
+							</div>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					New Topic: <input type="text" name="topic_new" placeholder="Topic" class="form-control">
+				</div>
+				<input type="submit" name="submit" value="Add Yourself!" class="btn btn-default">
+			</form>
+		</div>
+
+		<h3>People who are game for lunch:</h3>
+		<div id="friends">
+		<table id="first" class="table table-hover col-md-12 col-xs-12">
+			<thead>
+				<tr>
+					<th>Headline (Industry)</th>
+					<th>Topic</th>
+					<th>Location</th>
+					<th>LunchTogethr?</th>
+				</tr>
+			</thead>
+			<tbody>
+				<div id="body2">
+				{% for x in availables %}
+				{% if not friend_check %}
+				<tr>
+					<td>{{x['headline']}} ({{x['industry']}})</td>
+					<td>{{x['topic']}}</td>
+					<td>{{x['location']}}</td>
+					{% if x.linkedin_user_id != session['id'] %}
+					<td>
+						<form action="/arrangements/friend/{{x.linkedin_user_id}}" method="POST">
+							<button type="submit" class="btn btn-default" aria-label="Left Align">Yes!"</button>
+						</form>
+					</td>
+				{% else %}
+					{% if x.linkedin_user_id == session['id'] %}
+						<td>
+							<form id="button_delete" action="/arrangements/delete/{{x.linkedin_user_id}}" method="POST">
+								 <button id="delete_button"type="submit" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+							</form>
+						</td>
+					{% else %}
+						<td></td>
+					{% endif %}
+				{% endif %}
+				</tr>
+				{% endif %}
+				{% endfor %}
+				</div>
+			</tbody>
+		</table>
+		<h3 id="bottom">Some important conversation topics happening this afternoon:</h3>
+		<table id="first" class="table table-hover col-md-12 col-xs-12">
+		<table class="table table-hover " id="bottom_table">
+			<thead>
+				<tr>
+					<th>Topic</th>
+					<th>Location</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for x in arrangements %}
+				<tr>
+					<td>{{x.topic}}</td>
+					<td>{{x.location}}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		</div>
+
+	</div><!--end of container-->
+</body>
+</html>

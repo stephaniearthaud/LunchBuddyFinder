@@ -1,0 +1,30 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#container{
+	margin: 0 auto;
+	text-align: center;
+	margin-top: 200px;
+	color: white;
+	font-family: Futura;
+}
+
+#container img{
+	width: 250px;
+	height: auto;
+	align-self: center;
+}
+
+#container p {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+* {
+    background: url('/static/images/lunch02.jpg') no-repeat fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}

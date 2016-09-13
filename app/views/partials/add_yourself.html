@@ -1,0 +1,13 @@
+{% for x in availables %}
+<tr>
+	<td>{{x.headline}}</td>
+	<td>{{x.industry}}</td>
+	<td>{{x.topic}}</td>
+	<td>{{x.location}}</td>
+	<td>
+		<form action="/arrangements/friend/{{x.id}}" method="POST">
+			<input type="submit" value="Make a Lunch Arrangement">
+		</form>
+	</td>
+</tr>
+{% endfor %}

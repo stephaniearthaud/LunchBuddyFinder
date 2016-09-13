@@ -1,0 +1,57 @@
+
+#container{
+	/*margin: 0 auto;*/
+/*	margin-left: 10px;
+	margin-right: 10px;*/
+	/*width: 1200px;*/
+}
+
+#buddys table{
+	/*width: 1200px;*/
+	border: 2px solid black;
+	align-self: center;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+#bottom_table{
+	margin-top: 50px;
+	border: 2px solid black;
+	align-self: center;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+
+#nav{
+	display: inline;
+}
+
+#available{
+	margin-top: 10px;
+	float: right;
+	margin-right: 15px;
+}
+
+#centerpiece{
+	text-align: center;
+}
+
+#centerpiece img{
+	align-self: center;
+	margin-left: 120px;
+	margin-top: 60px;
+}
+
+#form{
+	margin-top: 20px;
+	text-align: center;
+}
+
+#lunchtogethr{
+	width: 100px;
+	height: auto;
+}
+/*
+h3 {
+	font-size: 100px;
+}*/

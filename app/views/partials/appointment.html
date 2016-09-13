@@ -1,0 +1,26 @@
+				{% for x in availables %}
+				{% if not friend_check %}
+				<tr>
+					<td>{{x['headline']}} ({{x['industry']}})</td>
+					<td>{{x['topic']}}</td>
+					<td>{{x['location']}}</td>
+					{% if x.linkedin_user_id != session['id'] %}
+					<td>
+						<form action="/arrangements/buddy/{{x.linkedin_user_id}}" method="POST">
+							<button type="submit" class="btn btn-default" aria-label="Left Align">Yes!"</button>
+						</form>
+					</td>
+				{% else %}
+					{% if x.linkedin_user_id == session['id'] %}
+						<td>
+							<form id="button_delete" action="/arrangements/delete/{{x.linkedin_user_id}}" method="POST">
+								 <button id="delete_button"type="submit" class="btn btn-default" aria-label="Left Align"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></button>
+							</form>
+						</td>
+					{% else %}
+						<td></td>
+					{% endif %}
+				{% endif %}
+				</tr>
+				{% endif %}
+				{% endfor %}

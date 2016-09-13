@@ -1,0 +1,28 @@
+
+#container{
+	margin: 0 auto;
+	/*width: 1200px;*/
+}
+
+#profile{
+	text-align: center;
+	font-size: 20px;
+}
+
+
+#lunchtoghethr{
+	width: 100px;
+	height: auto;
+}
+
+.row{
+	text-align: center;
+	font-size: 16px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+	.row img{
+		width: 200px;
+		height: auto;
+	}
